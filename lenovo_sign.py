@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+"""
+File: checkin.py(GLaDOS签到)
+Author: Hennessey
+Date: 2023/3/22 18:59
+cron: 40 0 * * *
+new Env('GLaDOS签到');
+Update: 2023/5/7 优化信息输出效果,新增本地运行
+"""
+
 import base64
-import json
 import logging
+import os
 import random
 import re
+import sys
 from sys import exit
-
-import smtplib
-from email.mime.text import MIMEText
-from smtplib import SMTP_SSL
-from email.header import Header
 
 import requests
 import toml
 from requests.utils import cookiejar_from_dict, dict_from_cookiejar
-
 
 USER_AGENT = [
     "Mozilla/5.0 (Linux; U; Android 11; zh-cn; PDYM20 Build/RP1A.200720.011) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/70.0.3538.80 Mobile Safari/537.36 HeyTapBrowser/40.7.24.9",
@@ -23,104 +28,20 @@ USER_AGENT = [
 ]
 
 
-class Push_messages:
-    class Server_chan:
-        def __init__(self, send_key: str) -> None:
-            self.send_key = send_key
-
-        def send_message(self, content: str) -> bool:
-            data = {"title": "联想签到", "desp": content}
-            response = requests.post(
-                f"https://sctapi.ftqq.com/{self.send_key}.send", data=data
-            )
-            res_data = response.json().get("data")
-            pushid = res_data.get("pushid")
-            readkey = res_data.get("readkey")
-            result = requests.get(
-                f"https://sctapi.ftqq.com/push?id={pushid}&readkey={readkey}"
-            )
-            return True if result.json().get("code") == 0 else False
-
-    class Wechat_message:
-        def __init__(self, corpid: str, corpsecret: str, agentid: str) -> None:
-            self.corpid = corpid
-            self.corpsecret = corpsecret
-            self.agentid = agentid
-            self.token = (
-                requests.get(
-                    f"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={self.corpid}&corpsecret={self.corpsecret}"
-                )
-                .json()
-                .get("access_token")
-            )
-
-        def send_message(self, content: str) -> bool:
-            data = {
-                "touser": "@all",
-                "msgtype": "text",
-                "agentid": self.agentid,
-                "text": {"content": content},
-                "safe": 0,
-            }
-            response = requests.post(
-                f"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={self.token}",
-                data=json.dumps(data),
-            )
-            return True if response.json().get("errcode") == 0 else False
-
-    class Dingtalk_message:
-        def __init__(self, ding_accesstoken: str) -> None:
-            self.ding_accesstoken = ding_accesstoken
-
-        def send_message(self, content: str) -> bool:
-            data = {
-                "msgtype": "text",
-                "text": {"content": content},
-                "at": {"isAtAll": True},
-            }
-            response = requests.post(
-                f"https://oapi.dingtalk.com/robot/send?access_token={self.ding_accesstoken}",
-                data=json.dumps(data),
-            )
-            return True if response.json().get("errcode") == 0 else False
-
-    class Email_message:
-        def __init__(self, sender_email: str, sender_password: str, receiver_email: str, smtp_server: str,
-                     smtp_port: int) -> None:
-            self.sender_email = sender_email
-            self.sender_password = sender_password
-            self.receiver_email = receiver_email
-            self.smtp_server = smtp_server
-            self.smtp_port = smtp_port
-
-        def send_message(self, content: str) -> bool:
-            receiver_email = [self.receiver_email]
-
-            message = MIMEText(content, 'plain', 'utf-8')
-            message['Subject'] = Header("联想智选定时签到结果", "utf-8")
-            message['From'] = Header("联想智选定时签到程序", "utf-8")
-            message['To'] = receiver_email[0]
-
-            try:
-                smtp = SMTP_SSL(self.smtp_server, self.smtp_port)
-                smtp.login(self.sender_email, self.sender_password)
-                smtp.sendmail(
-                    self.sender_email, receiver_email, message.as_string())
-                smtp.quit()
-                return True
-            except smtplib.SMTPException as e:
-                print('send email error', e)
-                return False
-
-
-def set_push_type():
-    for type, key in config.get("message_push").items():
-        key_list = key.values()
-        if "".join(key_list):
-            return getattr(Push_messages(), type)(*key_list).send_message
+# 加载通知服务
+def load_send():
+    cur_path = os.path.abspath(os.path.dirname(__file__))
+    sys.path.append(cur_path)
+    if os.path.exists(cur_path + "/sendNotify.py"):
+        try:
+            from sendNotify import send
+            return send
+        except Exception as e:
+            print(f"加载通知服务失败：{e}")
+            return None
     else:
-        return logger
-
+        print("加载通知服务失败")
+        return None
 
 def login(username, password):
     def get_cookie():
@@ -230,14 +151,15 @@ def main():
     if not (ua := config.get("browser").get("ua")):
         ua = random.choice(USER_AGENT)
         config["browser"]["ua"] = ua
-    push = set_push_type()
-    message = "联想签到: \n"
+    send_notify = load_send()
+    title = "联想签到: \n"
+    contents = ""
     for username, password in account.items():
         session = login(username, password)
         if not session:
             continue
-        message += sign(session)
-    push(message)
+        contents += sign(session)
+    send_notify(title, contents)
 
 
 if __name__ == "__main__":
