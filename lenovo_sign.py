@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-File: checkin.py(GLaDOS签到)
-Author: Hennessey
-Date: 2023/3/22 18:59
-cron: 40 0 * * *
-new Env('GLaDOS签到');
-Update: 2023/5/7 优化信息输出效果,新增本地运行
+File: lenovo_sing.py(联想商城签到)
+Author: marigold233,AlanZhao
+Date: 2023/5/27 11:05
+cron: 20 40 12 * *
+new Env('联想商城签到');
 """
 
 import base64
