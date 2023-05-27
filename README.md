@@ -1,5 +1,5 @@
-# lenovo-sign
-联想智选签到
+# lenovo-sign-ql
+联想智选签到-青龙专版
 
 **使用须知：**  
 **1. 使用的Python版本必须大于等于Python3.8**  
