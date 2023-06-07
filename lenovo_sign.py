@@ -53,8 +53,8 @@ def login(username, password):
             url="https://reg.lenovo.com.cn/auth/v1/login?ticket=5e9b6d3d-4500-47fc-b32b-f2b4a1230fd3&ru=https%3A%2F%2Fmclub.lenovo.com.cn%2F"
         )
         data = f"account={username}&password={base64.b64encode(str(password).encode()).decode()}\
-            &ps=1&ticket=5e9b6d3d-4500-47fc-b32b-f2b4a1230fd3&codeid=&code=&slide=v2&applicationPlatform=2&shopId=\
-                1&os=web&deviceId=BIr3m3RrRmoVwyYG9KOfd57odQsNnjr9DBn/TCt/wKRJFOySH7zL3pZK4/jVfAIB5E6ixvmU6SeaGCT+LWIlqHw==&t=1655187183738&websiteCode=10000001&websiteName=%25E5%2595%2586%25E5%259F%258E%25E\
+            &ps=1&ticket=e40e7004-4c8a-4963-8564-31271a8337d8&codeid=&code=&slide=v2&applicationPlatform=2&shopId=\
+                1&os=web&deviceId=BxnNiVCexepYh4FaJo6chcLkHIQIJw7zoOJCvzhQKPmJFaxzzJymRE3qKHa8c2GK0amhOqgpDQK7Us0d3vCAzcg==&t=1686133421129&websiteCode=10000001&websiteName=%25E5%2595%2586%25E5%259F%258E%25E\
                         7%25AB%2599&forwardPageUrl=https%253A%252F%252Fmclub.lenovo.com.cn%252F"
         login_response = session.post(
             url="https://reg.lenovo.com.cn/auth/v2/doLogin", data=data
