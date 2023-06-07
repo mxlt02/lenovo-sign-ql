@@ -13,7 +13,7 @@ jobs:
       - name: random cron
         run: |
           new_cron_expression="$(($RANDOM % 6 + 12)) $(($RANDOM % 60)) $(($RANDOM % 60)) * * *"
-          sed -i "4s/.*/$new_cron_expression/" lenovo_sign.py
+          sed -i "/^cron:/s/.*/$new_cron_expression/" lenovo_sign.py
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
