@@ -22,8 +22,8 @@ import toml
 from requests.utils import cookiejar_from_dict, dict_from_cookiejar
 
 USER_AGENT = [
-    "Mozilla/5.0 (Linux; U; Android 11; zh-cn; PDYM20 Build/RP1A.200720.011) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/70.0.3538.80 Mobile Safari/537.36 HeyTapBrowser/40.7.24.9",
-    "Mozilla/5.0 (Linux; Android 12; Redmi K30 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36"
+    "Mozilla/5.0 (Linux; U; Android 13; zh-CN; RMX3700 Build/SKQ1.221119.001) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.58 Quark/6.3.6.322 Mobile Safari/537.36",
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.37(0x1800252e) NetType/WIFI Language/zh_CN"
 ]
 
 
@@ -54,8 +54,7 @@ def login(username, password):
         )
         data = f"account={username}&password={base64.b64encode(str(password).encode()).decode()}\
             &ps=1&ticket=5e9b6d3d-4500-47fc-b32b-f2b4a1230fd3&codeid=&code=&slide=v2&applicationPlatform=2&shopId=\
-                1&os=web&deviceId=BIT%2F8ZTwWmvKpMsz3bQspIZRY9o9hK1Ce3zKIt5js7WSUgGQNnwvYmjcRjVHvJbQ00fe3T2wxgjZAVSd\
-                    OYl8rrQ%3D%3D&t=1655187183738&websiteCode=10000001&websiteName=%25E5%2595%2586%25E5%259F%258E%25E\
+                1&os=web&deviceId=BIr3m3RrRmoVwyYG9KOfd57odQsNnjr9DBn/TCt/wKRJFOySH7zL3pZK4/jVfAIB5E6ixvmU6SeaGCT+LWIlqHw==&t=1655187183738&websiteCode=10000001&websiteName=%25E5%2595%2586%25E5%259F%258E%25E\
                         7%25AB%2599&forwardPageUrl=https%253A%252F%252Fmclub.lenovo.com.cn%252F"
         login_response = session.post(
             url="https://reg.lenovo.com.cn/auth/v2/doLogin", data=data
