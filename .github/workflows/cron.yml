@@ -1,0 +1,22 @@
+name: Random Cron
+on:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }} #此处PAT需要申请，教程详见：https://www.jianshu.com/p/bb82b3ad1d11,需要repo和workflow权限
+      - name: random cron
+        run: |
+          new_cron_expression="$(($RANDOM % 6 + 12)) $(($RANDOM % 60)) $(($RANDOM % 60)) * * *"
+          sed -i "4s/.*/$new_cron_expression/" lenovo_sign.py
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "random cron"
+          git push origin master
