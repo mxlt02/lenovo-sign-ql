@@ -5,7 +5,7 @@
 File: lenovo_sing.py(联想商城签到)
 Author: marigold233,AlanZhao
 Date: 2023/5/27 11:05
-cron: 23 53 16 * * *
+cron: 44 9 16 * * *
 new Env('联想商城签到');
 """
 
